@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="Suite_01">
+	<listeners>
+		<listener class-name="company.project.execution.listener.SuiteListener"></listener>
+		<listener class-name="company.project.execution.listener.InvokedMethodListener"></listener>
+	</listeners>
+	
+	<test name="Test_01">
+		<classes>
+			<class name="company.project.test.sample.SampleTest"></class>
+		</classes>
+	</test>
+</suite>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="error" dest="out" packages="company.project.execution.logger, company.project.execution.reporter">
+	<Properties>
+		<Property name="allureReportInfoLayout">[%logger{1}] %msg%n</Property>
+	</Properties>
+	
+	<Appenders>
+		<AllureReport name="MyAllureReport">
+			<PatternLayout pattern="${allureReportInfoLayout}" />
+		</AllureReport>
+	</Appenders>
+	
+	<Loggers>
+		<Root level="all">
+			<AppenderRef ref="MyAllureReport" />
+		</Root>
+	</Loggers>
+</Configuration>

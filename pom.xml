@@ -1,0 +1,173 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.company.productline</groupId>
+	<artifactId>demo-assertion</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Demo of  Soft Assert and Hard Assert</name>
+	
+	<properties>
+		<!-- Override default properties here -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		
+		<!-- Define new properties from here -->
+		
+		<java.version>11</java.version>
+		<allureReport.resultsPath>${project.basedir}/target/allure-results</allureReport.resultsPath>
+		<allureReport.categories.folderPath>${project.basedir}/src/resources/company/project/resources/settings</allureReport.categories.folderPath>
+		
+		<testng.version>6.14.3</testng.version>
+		<log4j.version>2.20.0</log4j.version>
+		<slf4j.jdk14.version>2.0.7</slf4j.jdk14.version>
+		<allurereport-testng.version>2.23.0</allurereport-testng.version>
+		<aspectj.version>1.9.19</aspectj.version>
+	</properties>
+	
+	<build>
+		<!-- Maven doesn't copy resource files (e.g., .properties, .xml) from source folders by default -->
+		<!-- We must instruct Maven to do that by specifying the resources -->
+		<resources>
+			<resource>
+				<directory>src/resources</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/testsuite</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		
+		<plugins>
+			<!-- Define a project structure that includes multiple source folders -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.4.0</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/test</source>
+								<source>src/core</source>
+								<source>src/execution</source>
+								<source>src/resources</source>
+								<source>src/testsuite</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Copy file "categories.json" to Allure report's folder at phase "compile" in the "default" lifecycle -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.3.1</version>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${allureReport.resultsPath}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${allureReport.categories.folderPath}</directory>
+									<includes>
+										<include>categories.json</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Add plugin for Allure to generate report through Maven CLI -->
+			<plugin>
+				<groupId>io.qameta.allure</groupId>
+				<artifactId>allure-maven</artifactId>
+				<version>2.12.0</version>
+			</plugin>
+			<!-- Compiler -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.11.0</version>
+				<configuration>
+					<release>${java.version}</release>
+				</configuration>
+			</plugin>
+			<!-- Run test -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.1.2</version>
+				<configuration>
+					<!-- Run TestNG xml file -->
+					<suiteXmlFiles>
+						<suiteXmlFile>src/testsuite/suite.xml</suiteXmlFile>
+					</suiteXmlFiles>
+					<!-- Config for Allure report -->
+					<argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+					</argLine>
+					<systemPropertyVariables>
+						<allure.results.directory>${allureReport.resultsPath}</allure.results.directory>
+						<allure.link.issue.pattern>https://example.org/issue/{}</allure.link.issue.pattern>
+						<allure.link.tms.pattern>https://example.org/tms/{}</allure.link.tms.pattern>
+						<allure.link.mylink.pattern>https://example.org/mylink/{}</allure.link.mylink.pattern>
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>${testng.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>${slf4j.jdk14.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-testng -->
+		<dependency>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-testng</artifactId>
+			<version>${allurereport-testng.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+		<!-- Required for Allure -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
+	</dependencies>
+</project>
