@@ -1,3 +1,3 @@
 set scriptPath=%~dp0
-cd %scriptPath%
+cd "%scriptPath%"
 mvnw clean test & mvnw allure:serve

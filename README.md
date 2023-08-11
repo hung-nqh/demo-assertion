@@ -1,0 +1,1 @@
+- Need to have Java 11 or above installed, and set system environment variables for Java (JAVA_HOME and Path).
