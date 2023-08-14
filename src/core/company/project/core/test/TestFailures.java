@@ -10,6 +10,10 @@ public class TestFailures {
 
 	private static ConcurrentHashMap<ITestResult, LinkedList<Throwable>> allTestFailures = new ConcurrentHashMap<>();
 	
+	public static ConcurrentHashMap<ITestResult, LinkedList<Throwable>> getCollection() {
+		return allTestFailures;
+	}
+	
 	public static void addFailureToTestResult(Throwable ex) {
 		ITestResult testResult = Reporter.getCurrentTestResult();
 		LinkedList<Throwable> testFailures = allTestFailures.get(testResult);

@@ -34,6 +34,9 @@ public class InvokedMethodListener implements IInvokedMethodListener {
 			 * Failed by soft assert and { hard assert || non-AssertionError }.
 			 */
 			handleFailedTestMethod(testResult);
+			
+			// Clean temporary objects
+			TestFailures.getCollection().remove(testResult);
 		}
 	}
 	
